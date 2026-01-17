@@ -1,62 +1,200 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>價格</title>
-    <style>
-        body {
-            font-family: '標楷體', 'Arial', sans-serif;
-            background-color: #f8f8f8;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;	
-        }
+import React, { useState } from 'react';
+import { Camera, MapPin, Instagram, Mail, Share2, Anchor, Coffee, Compass, ChevronRight, Menu, X, Waves } from 'lucide-react';
 
-        .container {
-            max-width: 600px;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('all');
 
-        p {
-            margin: 0;
-            padding: 10px 0; /* 調整文字間距 */
-            font-family: '標楷體', 'Arial', sans-serif;
-            font-size: 16px; /* 調整字體大小 */
-            font-weight: bold; /* 使用粗體 */
-        }
+  // 更新後的內容數據：探店、故事、潛水
+  const stories = [
+    { id: 1, category: 'diving', title: '綠島．深藍之下的寂靜', date: '2023.08', image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=800' },
+    { id: 2, category: 'shop', title: '赤峰街．時光倒流的老屋咖啡', date: '2023.12', image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=800' },
+    { id: 3, category: 'story', title: '九份．霧氣中的山城往事', date: '2024.01', image: 'https://images.unsplash.com/photo-1571401660336-cc043b86927c?auto=format&fit=crop&q=80&w=800' },
+    { id: 4, category: 'diving', title: '小琉球．與海龜的午後約會', date: '2023.06', image: 'https://images.unsplash.com/photo-1544552866-d3ed42536cfd?auto=format&fit=crop&q=80&w=800' },
+    { id: 5, category: 'shop', title: '民生社區．隱身巷弄的選物店', date: '2023.11', image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800' },
+    { id: 6, category: 'story', title: '台南．穿梭府城的紅磚巷弄', date: '2024.02', image: 'https://images.unsplash.com/photo-1528150177508-7cc0c36cda5c?auto=format&fit=crop&q=80&w=800' },
+  ];
 
-        hr {
-            margin: 20px 0;
-            border: 1px solid #ddd;
-        }
+  const filteredStories = activeTab === 'all' ? stories : stories.filter(s => s.category === activeTab);
 
-        .total {
-            font-weight: bold;
-            font-size: 20px; /* 調整總價字體大小 */
-            font-family: '標楷體', 'Arial', sans-serif;
-        }
-    </style>
-</head>
-<body>
+  return (
+    <div className="min-h-screen bg-[#faf9f6] text-[#2d2d2d] font-serif selection:bg-[#d4c5b9] selection:text-white">
+      {/* 導覽列 */}
+      <nav className="fixed w-full z-50 bg-[#faf9f6]/90 backdrop-blur-md border-b border-[#e5e5e5]">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="text-2xl font-serif italic tracking-wider text-[#5a5a5a]">Z.Y.XU</div>
+          
+          {/* 桌面版選單 */}
+          <div className="hidden md:flex space-x-10 text-xs font-medium tracking-[0.2em] uppercase text-gray-500">
+            <a href="#home" className="hover:text-black transition-colors">Home</a>
+            <a href="#about" className="hover:text-black transition-colors">About</a>
+            <a href="#journal" className="hover:text-black transition-colors">Journal</a>
+            <a href="#contact" className="hover:text-black transition-colors">Contact</a>
+          </div>
 
-<div class="container">
-    <p>車錢: $3760 / 4 => $940</p>
-    <!--$950-->
-    <p>ETAG: $187.8 北上 + $187.6 南下 = $376 / 4 => $95</p>
-    <p>里程: $1980 (600 * 3.3) / 4 => $495</p>
-    <p>飯店: $3200/4 => $800</p>
-    <p>麗寶: $800</p>
-    <!--$2330-->
-    <!--收$2600-->
-    <hr>
-    <p class="total">Total: $3130</p>
-</div>
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-gray-600">
+            {isMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
 
-</body>
-</html>
+        {/* 手機版選單 */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-[#faf9f6] border-b border-[#e5e5e5] px-6 py-8 flex flex-col space-y-6">
+            <a href="#home" onClick={() => setIsMenuOpen(false)} className="text-xl">首頁</a>
+            <a href="#about" onClick={() => setIsMenuOpen(false)} className="text-xl">關於生活</a>
+            <a href="#journal" onClick={() => setIsMenuOpen(false)} className="text-xl">探索紀錄</a>
+            <a href="#contact" onClick={() => setIsMenuOpen(false)} className="text-xl">聯繫</a>
+          </div>
+        )}
+      </nav>
+
+      {/* 英雄區區塊 (Hero Section) */}
+      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1493246507139-91e8bef99c02?auto=format&fit=crop&q=80&w=1600" 
+            className="w-full h-full object-cover opacity-20"
+            alt="Hero Background"
+          />
+        </div>
+
+        <div className="relative z-10 text-center px-6 max-w-4xl">
+          <h2 className="text-[#8c7e6d] text-sm font-medium tracking-[0.4em] uppercase mb-6">Store seeker & Deep diver</h2>
+          <h1 className="text-5xl md:text-7xl font-serif mb-10 leading-tight">
+            探尋角落的溫度，<br />紀錄深藍下的故事。
+          </h1>
+          <p className="text-lg text-gray-500 font-light leading-relaxed mb-12 max-w-2xl mx-auto font-sans">
+            在城市的巷弄間尋找獨特的靈魂空間，<br />在海平線之下探訪被遺忘的靜謐片刻。
+          </p>
+          <div className="flex items-center justify-center gap-8">
+            <a href="#journal" className="text-sm font-bold tracking-[0.2em] border-b-2 border-[#8c7e6d] pb-2 hover:text-[#8c7e6d] transition-all">
+              EXPLORE JOURNAL
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 關於我 (About Section) */}
+      <section id="about" className="py-32 px-6 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-12 gap-12 items-center">
+          <div className="md:col-span-5 relative">
+            <img 
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" 
+              className="rounded-sm shadow-xl"
+              alt="Profile"
+            />
+            <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-[#d4c5b9]/20 -z-10 rounded-full blur-2xl"></div>
+          </div>
+          <div className="md:col-span-7 md:pl-12 space-y-8">
+            <h3 className="text-4xl md:text-5xl font-serif">寫在故事的開頭</h3>
+            <div className="space-y-6 text-gray-600 leading-loose font-sans text-lg">
+              <p>
+                我不是在尋找冒險，而是在尋找那些「有故事」的瞬間。對我而言，一間有特色的店，是店主對生活的詮釋；一個有故事的地方，是時間留下的印記。
+              </p>
+              <p>
+                我也熱愛潛水。海面之下沒有喧囂，只有規律的呼吸聲與深藍色的包圍。那種全然的寧靜，與城市巷弄裡的驚喜相輝映，構成我生活的平衡。
+              </p>
+            </div>
+            <div className="flex gap-12 pt-6">
+              <div className="flex flex-col gap-2">
+                <Coffee className="text-[#8c7e6d]" size={24} />
+                <span className="text-sm font-bold">Curated Spaces</span>
+                <span className="text-xs text-gray-400">質感店鋪</span>
+              </div>
+              <div className="flex flex-col gap-2">
+                <Waves className="text-[#8c7e6d]" size={24} />
+                <span className="text-sm font-bold">Ocean Explorer</span>
+                <span className="text-xs text-gray-400">深海潛行</span>
+              </div>
+              <div className="flex flex-col gap-2">
+                <Compass className="text-[#8c7e6d]" size={24} />
+                <span className="text-sm font-bold">Local Stories</span>
+                <span className="text-xs text-gray-400">人文紀實</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 探索紀錄 (Journal Section) */}
+      <section id="journal" className="py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-serif mb-6">生活碎片</h2>
+            <div className="flex justify-center gap-6 md:gap-12 mt-8 overflow-x-auto pb-4">
+              {[
+                { id: 'all', label: '全部內容' },
+                { id: 'shop', label: '特色店鋪' },
+                { id: 'diving', label: '潛水足跡' },
+                { id: 'story', label: '故事採集' }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`text-xs tracking-[0.3em] uppercase transition-all whitespace-nowrap
+                    ${activeTab === tab.id ? 'text-[#8c7e6d] font-bold border-b border-[#8c7e6d]' : 'text-gray-400 hover:text-black'}`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {filteredStories.map((item) => (
+              <div key={item.id} className="group cursor-pointer">
+                <div className="aspect-[3/4] overflow-hidden mb-6 rounded-lg shadow-sm">
+                  <img 
+                    src={item.image} 
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    alt={item.title}
+                  />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-[10px] tracking-[0.2em] text-[#8c7e6d] uppercase font-sans">
+                    <span>{item.category === 'diving' ? 'Underwater' : item.category === 'shop' ? 'Curated' : 'Story'}</span>
+                    <span className="text-gray-400">{item.date}</span>
+                  </div>
+                  <h4 className="text-xl font-serif group-hover:italic transition-all">{item.title}</h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 聯繫 (Contact Section) */}
+      <section id="contact" className="py-32 px-6">
+        <div className="max-w-2xl mx-auto text-center space-y-12">
+          <div className="inline-block p-4 rounded-full border border-[#8c7e6d]/30">
+            <Anchor className="text-[#8c7e6d]" />
+          </div>
+          <h2 className="text-4xl font-serif leading-tight">關於美好的事物，<br />隨時歡迎分享與交流。</h2>
+          <p className="text-gray-500 font-sans leading-loose">
+            無論是你想推薦一間充滿故事的小店，或是交流潛水心得，我都很期待收到你的訊息。
+          </p>
+          <div className="flex flex-col md:flex-row justify-center items-center gap-12 pt-4">
+            <a href="mailto:hello@zyxu.me" className="text-xs tracking-[0.4em] uppercase font-bold border-b border-black pb-1 hover:text-[#8c7e6d] hover:border-[#8c7e6d] transition-all">
+              Send Email
+            </a>
+            <a href="https://instagram.com/z.y.xu" target="_blank" className="text-xs tracking-[0.4em] uppercase font-bold border-b border-black pb-1 hover:text-[#8c7e6d] hover:border-[#8c7e6d] transition-all">
+              Instagram DM
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 頁尾 */}
+      <footer className="py-16 border-t border-[#e5e5e5] text-center">
+        <div className="max-w-7xl mx-auto px-6 space-y-6">
+          <div className="text-xl font-serif italic text-gray-400">Z.Y. XU</div>
+          <div className="text-[10px] tracking-[0.3em] uppercase text-gray-400 font-sans">
+            Curating Life, Exploring Deep. © 2024
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
